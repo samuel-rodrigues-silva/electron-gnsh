@@ -52,9 +52,9 @@ const capturingScreenshot = async () => {
       try {
         const image = await sources[0].thumbnail.resize({ width: 1920, height: 1080 }).toPNG()
         const filePath =
-          `C:/Users/samuk/Documents/electron-ganesha/screenshots/` +
+          path.join(path.resolve(__dirname, '../', '..'), 'screenshots/') +
           new Date().getUTCMilliseconds() +
-          'snapshot2.png'
+          'screen.png'
         fs.writeFile(filePath, image, (err) => {
           if (err) {
             console.log('Failed to save screenshot:', err)
@@ -114,7 +114,9 @@ const ipcListeners = (win: BrowserWindow) => {
 }
 
 const generateSystemTrayAndTriggeringScreenshots = () => {
-  const tray = new Tray('C:/Users/samuk/Downloads/ganesha.png')
+  const tray = new Tray(
+    path.join(path.resolve(__dirname, '../', '..'), 'src/renderer/src/assets/ganesha.png')
+  )
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Pausar monitoramento',
