@@ -29,10 +29,9 @@ const App = (): JSX.Element => {
             )
           }}
         >
-          <option value="3000">3 segundos</option>
-          <option value="10000">10 segundos</option>
-          <option value="20000">20 segundos</option>
+          <option value="30000">30 segundos</option>
           <option value="60000">1 minuto</option>
+          <option value="3000000">5 minutos</option>
         </select>
       </div>
 

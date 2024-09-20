@@ -5,6 +5,7 @@ import path from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 import icon from '../../resources/icon.png'
 import fs from 'fs'
+import { pipeline } from '@xenova/transformers'
 
 const createWindow = (): void => {
   // Create the browser window.
@@ -42,6 +43,16 @@ const createWindow = (): void => {
   }
 }
 
+const handlingLMModelCallback = async (img) => {
+  // const model = await AutoModelForCausalLM.from_pretrained('qresearch/llama-3.1-8B-vision-378')
+  // const tokenizer = await AutoTokenizer.from_pretrained('qresearch/llama-3.1-8B-vision-378');
+
+  const detector = await pipeline('object-detection', 'Xenova/detr-resnet-50')
+  const output = await detector(img, { threshold: 0.9 })
+
+  console.log(output)
+}
+
 const capturingScreenshot = async () => {
   desktopCapturer
     .getSources({
@@ -55,6 +66,7 @@ const capturingScreenshot = async () => {
           path.join(path.resolve(__dirname, '../', '..'), 'screenshots/') +
           new Date().getUTCMilliseconds() +
           'screen.png'
+        handlingLMModelCallback(image)
         fs.writeFile(filePath, image, (err) => {
           if (err) {
             console.log('Failed to save screenshot:', err)
@@ -70,7 +82,7 @@ const capturingScreenshot = async () => {
 
 const appState: { intervalListener: null | NodeJS.Timeout; screenshotInterval: number } = {
   intervalListener: null,
-  screenshotInterval: 3000
+  screenshotInterval: 30000
 }
 
 const triggerCountDown = (win: BrowserWindow): NodeJS.Timeout => {
